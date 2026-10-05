@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cardápio - Cafeteria Elegante</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <nav class="navbar" id="mainNav">
+        <a href="index.html" class="navbar-brand"><i class="fas fa-mug-hot"></i> Cafeteria Elegante</a>
+        <button class="navbar-toggle" type="button" aria-label="Abrir menu" onclick="document.getElementById('mainNav').classList.toggle('open')">
+          <i class="fas fa-bars"></i>
+        </button>
+        <ul class="navbar-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="produtos.html" class="active">Cardápio</a></li>
+          <li><a href="pedidos.html">Pedidos</a></li>
+          <li><a href="login.html">Entrar</a></li>
+          <li><a href="administrativo.html">Admin</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding: 32px 0 72px;">
+    <section class="page-intro">
+      <h1>☕ Nosso Cardápio Completo</h1>
+      <p>Escolha seus itens favoritos e adicione ao carrinho.</p>
+    </section>
+
+    <div id="productsContainer"></div>
+  </main>
+
+  <aside class="offcanvas" id="cartPanel">
+    <div class="offcanvas-header">
+      <h3>Meu Carrinho</h3>
+      <button class="btn-danger" type="button" onclick="toggleCart(false)"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="offcanvas-body">
+      <div id="cartItems"></div>
+      <div class="cart-summary">
+        <div class="cart-total">
+          <span>Total:</span>
+          <span id="cartTotal">R$ 0,00</span>
+        </div>
+        <button class="btn-primary" onclick="finishPurchase()"><i class="fab fa-whatsapp"></i> Finalizar pelo WhatsApp</button>
+        <button class="btn-secondary mt-2" style="width: 100%;" onclick="clearCart()">Limpar carrinho</button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="toast" id="toast"></div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2024 Cafeteria Elegante. Todos os direitos reservados.</p>
+      <div class="social-links">
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const productCatalog = [
+      {
+        category: 'Bebidas Quentes',
+        icon: '☕',
+        products: [
+          { name: 'Café Expresso', price: 5.00, image: 'https://images.unsplash.com/photo-1498804103079-a6351b050096?auto=format&fit=crop&w=900&q=80' },
+          { name: 'Cappuccino', price: 8.50, image: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=900&q=80' },
+          { name: 'Caffè Latte', price: 8.00, image: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=900&q=80' }
+        ]
+      },
+      {
+        category: 'Bebidas Geladas',
+        icon: '🧊',
+        products: [
+          { name: 'Café Gelado', price: 7.00, image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=900&q=80' },
+          { name: 'Cold Brew', price: 8.50, image: 'https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=900&q=80' },
+          { name: 'Milk Shake', price: 9.50, image: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=900&q=80' }
+        ]
+      },
+      {
+        category: 'Padaria e Confeitaria',
+        icon: '🥐',
+        products: [
+          { name: 'Pão de Queijo', price: 4.50, image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=900&q=80' },
+          { name: 'Croissant', price: 6.00, image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=900&q=80' },
+          { name: 'Sonho', price: 5.50, image: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=900&q=80' }
+        ]
+      },
+      {
+        category: 'Lanches',
+        icon: '🥪',
+        products: [
+          { name: 'Sanduíche Natural', price: 12.00, image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=900&q=80' },
+          { name: 'Misto Quente', price: 10.00, image: 'https://images.unsplash.com/photo-1553909489-cd47e0ef937f?auto=format&fit=crop&w=900&q=80' },
+          { name: 'Wrap Grelhado', price: 14.50, image: 'https://images.unsplash.com/photo-1612874742237-652febc13f1d?auto=format&fit=crop&w=900&q=80' }
+        ]
+      },
+      {
+        category: 'Sobremesas',
+        icon: '🍰',
+        products: [
+          { name: 'Pudim', price: 6.50, image: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=900&q=80' },
+          { name: 'Brigadeiro Gourmet', price: 7.00, image: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=900&q=80' },
+          { name: 'Tiramisu', price: 10.00, image: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&fit=crop&w=900&q=80' }
+        ]
+      }
+    ];
+
+    const cartKey = 'cafeteriaCart';
+
+    function formatCurrency(value) {
+      return Number(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
+    function getCart() {
+      try {
+        return JSON.parse(localStorage.getItem(cartKey)) || [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveCart(cart) {
+      localStorage.setItem(cartKey, JSON.stringify(cart));
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    function addToCart(productName, price) {
+      const cart = getCart();
+      const item = cart.find((entry) => entry.name === productName);
+
+      if (item) {
+        item.quantity += 1;
+      } else {
+        cart.push({ name: productName, price, quantity: 1 });
+      }
+
+      saveCart(cart);
+      renderCart();
+      showToast(`${productName} foi adicionado ao carrinho!`);
+    }
+
+    function renderProducts() {
+      const container = document.getElementById('productsContainer');
+      if (!container) return;
+
+      container.innerHTML = productCatalog.map((section) => `
+        <section class="category-section">
+          <div class="category-header">
+            <span class="category-icon">${section.icon}</span>
+            <h2 class="category-title">${section.category}</h2>
+          </div>
+          <div class="product-grid">
+            ${section.products.map((product) => `
+              <article class="product-card">
+                <div class="product-image">
+                  <img src="${product.image}" alt="${product.name}" loading="lazy" />
+                </div>
+                <div class="product-info">
+                  <h3 class="product-name">${product.name}</h3>
+                  <p class="product-price">${formatCurrency(product.price)}</p>
+                  <button class="btn-primary" type="button" onclick="addToCart('${product.name}', ${product.price})">
+                    <i class="fas fa-shopping-cart"></i> Adicionar
+                  </button>
+                </div>
+              </article>
+            `).join('')}
+          </div>
+        </section>
+      `).join('');
+    }
+
+    function renderCart() {
+      const cartItems = document.getElementById('cartItems');
+      const cartTotal = document.getElementById('cartTotal');
+      const cart = getCart();
+
+      if (!cartItems || !cartTotal) return;
+
+      if (!cart.length) {
+        cartItems.innerHTML = `
+          <div class="empty-cart">
+            <i class="fas fa-shopping-basket"></i>
+            <p>Seu carrinho está vazio.</p>
+          </div>
+        `;
+        cartTotal.textContent = 'R$ 0,00';
+        return;
+      }
+
+      const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      cartItems.innerHTML = cart.map((item, index) => `
+        <div class="cart-item">
+          <div class="cart-item-info">
+            <span class="cart-item-name">${item.name}</span>
+            <span class="cart-item-price">${formatCurrency(item.price)} x ${item.quantity}</span>
+          </div>
+          <div class="cart-item-actions">
+            <button class="qty-btn" type="button" onclick="changeQuantity(${index}, -1)">-</button>
+            <span class="qty-value">${item.quantity}</span>
+            <button class="qty-btn" type="button" onclick="changeQuantity(${index}, 1)">+</button>
+            <button class="remove-btn" type="button" onclick="removeItem(${index})"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>
+      `).join('');
+
+      cartTotal.textContent = formatCurrency(total);
+    }
+
+    function changeQuantity(index, delta) {
+      const cart = getCart();
+      const item = cart[index];
+      if (!item) return;
+
+      item.quantity += delta;
+
+      if (item.quantity <= 0) {
+        cart.splice(index, 1);
+      }
+
+      saveCart(cart);
+      renderCart();
+    }
+
+    function removeItem(index) {
+      const cart = getCart();
+      cart.splice(index, 1);
+      saveCart(cart);
+      renderCart();
+    }
+
+    function clearCart() {
+      if (!getCart().length) return;
+      localStorage.removeItem(cartKey);
+      renderCart();
+      showToast('Carrinho limpo!');
+    }
+
+    function toggleCart(forceOpen) {
+      const panel = document.getElementById('cartPanel');
+      if (!panel) return;
+      const shouldOpen = typeof forceOpen === 'boolean' ? forceOpen : !panel.classList.contains('open');
+      panel.classList.toggle('open', shouldOpen);
+    }
+
+    function finishPurchase() {
+      const cart = getCart();
+      if (!cart.length) {
+        showToast('Adicione algum produto antes de finalizar.');
+        return;
+      }
+
+      const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      const text = encodeURIComponent(
+        `Olá! Gostaria de finalizar o pedido:\n\n${cart.map((item) => `${item.quantity}x ${item.name} - ${formatCurrency(item.price * item.quantity)}`).join('\n')}\n\nTotal: ${formatCurrency(total)}\n\nAguardo confirmação.`
+      );
+
+      window.open(`https://wa.me/5511300000000?text=${text}`, '_blank');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderProducts();
+      renderCart();
+
+      const cartButton = document.createElement('button');
+      cartButton.type = 'button';
+      cartButton.className = 'cart-button';
+      cartButton.innerHTML = '<i class="fas fa-shopping-cart"></i> Carrinho <span class="cart-count">0</span>';
+      cartButton.onclick = () => toggleCart(true);
+
+      const nav = document.querySelector('.navbar-links');
+      if (nav) {
+        const li = document.createElement('li');
+        li.appendChild(cartButton);
+        nav.appendChild(li);
+      }
+
+      const updateCartBadge = () => {
+        const count = getCart().reduce((sum, item) => sum + item.quantity, 0);
+        const badge = document.querySelector('.cart-count');
+        if (badge) badge.textContent = count;
+      };
+
+      updateCartBadge();
+      const originalRenderCart = renderCart;
+      renderCart = () => {
+        originalRenderCart();
+        updateCartBadge();
+      };
+    });
+  </script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

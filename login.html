@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Cafeteria Elegante</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <nav class="navbar" id="mainNav">
+        <a href="index.html" class="navbar-brand"><i class="fas fa-mug-hot"></i> Cafeteria Elegante</a>
+        <button class="navbar-toggle" type="button" aria-label="Abrir menu" onclick="document.getElementById('mainNav').classList.toggle('open')">
+          <i class="fas fa-bars"></i>
+        </button>
+        <ul class="navbar-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="produtos.html">Cardápio</a></li>
+          <li><a href="pedidos.html">Pedidos</a></li>
+          <li><a href="login.html" class="active">Entrar</a></li>
+          <li><a href="administrativo.html">Admin</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="login-wrap">
+    <section class="login-box">
+      <div class="login-icon"><i class="fas fa-user-lock"></i></div>
+      <h1>Entrar</h1>
+      <p class="text-muted text-center">Acesse sua conta para fazer e acompanhar pedidos.</p>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label class="form-label" for="email">E-mail</label>
+          <input id="email" class="form-control" type="email" required placeholder="seu@email.com" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Senha</label>
+          <input id="password" class="form-control" type="password" required placeholder="********" />
+        </div>
+
+        <button class="form-submit" type="submit">Entrar</button>
+        <div id="loginError" class="error-message" aria-live="polite"></div>
+      </form>
+
+      <div class="demo-box">
+        <strong>Contas para demonstração:</strong><br />
+        Cliente: cliente@cafeteria.com / 123456<br />
+        Gerente: gerente@cafeteria.com / admin123
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2024 Cafeteria Elegante. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="assets/js/app.js"></script>
+  <script>
+    const authUsers = [
+      { id: 1, name: 'Cliente', email: 'cliente@cafeteria.com', password: '123456', role: 'cliente' },
+      { id: 2, name: 'Gerente', email: 'gerente@cafeteria.com', password: 'admin123', role: 'gerente' }
+    ];
+
+    document.getElementById('loginForm').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const password = document.getElementById('password').value;
+      const error = document.getElementById('loginError');
+      const user = authUsers.find((entry) => entry.email === email && entry.password === password);
+
+      if (!user) {
+        error.textContent = 'E-mail ou senha inválidos.';
+        return;
+      }
+
+      localStorage.setItem('cafeteriaUser', JSON.stringify({ id: user.id, name: user.name, email: user.email, role: user.role }));
+      window.location.href = user.role === 'gerente' ? 'administrativo.html' : 'pedidos.html';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meus Pedidos - Cafeteria Elegante</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <nav class="navbar" id="mainNav">
+        <a href="index.html" class="navbar-brand"><i class="fas fa-mug-hot"></i> Cafeteria Elegante</a>
+        <button class="navbar-toggle" type="button" aria-label="Abrir menu" onclick="document.getElementById('mainNav').classList.toggle('open')">
+          <i class="fas fa-bars"></i>
+        </button>
+        <ul class="navbar-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="produtos.html">Cardápio</a></li>
+          <li><a href="pedidos.html" class="active">Pedidos</a></li>
+          <li><a href="login.html">Entrar</a></li>
+          <li><a href="administrativo.html">Admin</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding: 32px 0 72px;">
+    <div class="page-intro">
+      <h1><i class="fas fa-receipt"></i> Meus Pedidos</h1>
+      <p>Acompanhe o status dos seus pedidos e histórico de compras.</p>
+    </div>
+
+    <div class="orders-summary" id="ordersSummary"></div>
+
+    <div class="filter-group" id="filterGroup">
+      <button class="filter-btn active" type="button" data-filter="all">Todos</button>
+      <button class="filter-btn" type="button" data-filter="pending">Pendentes</button>
+      <button class="filter-btn" type="button" data-filter="confirmed">Confirmados</button>
+      <button class="filter-btn" type="button" data-filter="preparing">Preparando</button>
+      <button class="filter-btn" type="button" data-filter="ready">Prontos</button>
+      <button class="filter-btn" type="button" data-filter="delivered">Entregues</button>
+    </div>
+
+    <div id="ordersList"></div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2024 Cafeteria Elegante. Todos os direitos reservados.</p>
+      <div class="social-links">
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const orders = [
+      {
+        id: 'PED001',
+        date: '2024-09-25',
+        status: 'pending',
+        items: [
+          { name: 'Café Expresso', qty: 2, price: 5 },
+          { name: 'Croissant', qty: 1, price: 6 }
+        ],
+        total: 16
+      },
+      {
+        id: 'PED002',
+        date: '2024-09-24',
+        status: 'delivered',
+        items: [
+          { name: 'Cappuccino', qty: 1, price: 8.5 },
+          { name: 'Pão de Queijo', qty: 2, price: 4.5 }
+        ],
+        total: 17.5
+      },
+      {
+        id: 'PED003',
+        date: '2024-09-23',
+        status: 'ready',
+        items: [
+          { name: 'Caffè Latte', qty: 1, price: 8 },
+          { name: 'Brigadeiro Gourmet', qty: 3, price: 7 }
+        ],
+        total: 29
+      },
+      {
+        id: 'PED004',
+        date: '2024-09-22',
+        status: 'delivered',
+        items: [
+          { name: 'Café Gelado', qty: 2, price: 7 },
+          { name: 'Sanduíche Natural', qty: 1, price: 12 }
+        ],
+        total: 26
+      },
+      {
+        id: 'PED005',
+        date: '2024-09-21',
+        status: 'preparing',
+        items: [
+          { name: 'Mocha', qty: 1, price: 9.5 },
+          { name: 'Tiramisu', qty: 1, price: 10 }
+        ],
+        total: 19.5
+      }
+    ];
+
+    const statusLabels = {
+      pending: 'Pendente',
+      confirmed: 'Confirmado',
+      preparing: 'Preparando',
+      ready: 'Pronto',
+      delivered: 'Entregue'
+    };
+
+    function formatCurrency(value) {
+      return Number(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
+    function renderSummary() {
+      const total = orders.reduce((sum, order) => sum + order.total, 0);
+      const delivered = orders.filter((order) => order.status === 'delivered').length;
+      const pending = orders.filter((order) => order.status === 'pending').length;
+
+      document.getElementById('ordersSummary').innerHTML = `
+        <div class="summary-card">
+          <i class="fas fa-shopping-bag"></i>
+          <div class="summary-card-value">${orders.length}</div>
+          <div class="summary-card-label">Pedidos</div>
+        </div>
+        <div class="summary-card">
+          <i class="fas fa-clock"></i>
+          <div class="summary-card-value">${pending}</div>
+          <div class="summary-card-label">Pendentes</div>
+        </div>
+        <div class="summary-card">
+          <i class="fas fa-check-circle"></i>
+          <div class="summary-card-value">${delivered}</div>
+          <div class="summary-card-label">Concluídos</div>
+        </div>
+        <div class="summary-card">
+          <i class="fas fa-dollar-sign"></i>
+          <div class="summary-card-value">${formatCurrency(total)}</div>
+          <div class="summary-card-label">Total gasto</div>
+        </div>
+      `;
+    }
+
+    function renderOrders(filter = 'all') {
+      const list = document.getElementById('ordersList');
+      const filtered = filter === 'all' ? orders : orders.filter((order) => order.status === filter);
+
+      if (!filtered.length) {
+        list.innerHTML = `
+          <div class="empty-orders">
+            <i class="fas fa-inbox"></i>
+            <p>Nenhum pedido encontrado.</p>
+            <a href="produtos.html" class="btn-primary" style="max-width: 220px; display: inline-block;">Fazer um pedido</a>
+          </div>
+        `;
+        return;
+      }
+
+      list.innerHTML = filtered.map((order) => `
+        <article class="order-card">
+          <div class="order-header">
+            <div>
+              <div class="order-id">Pedido #${order.id}</div>
+              <div class="order-date">${new Date(order.date).toLocaleDateString('pt-BR')}</div>
+            </div>
+            <span class="order-status status-${order.status}">
+              <i class="fas fa-circle-notch"></i> ${statusLabels[order.status]}
+            </span>
+          </div>
+          <div class="order-items">
+            ${order.items.map((item) => `
+              <div class="order-item">
+                <span class="item-name">${item.name}</span>
+                <span class="item-price">${item.qty}x ${formatCurrency(item.price * item.qty)}</span>
+              </div>
+            `).join('')}
+          </div>
+          <div class="order-total">
+            <span>Total:</span>
+            <span>${formatCurrency(order.total)}</span>
+          </div>
+          <div class="order-actions">
+            <button class="btn-small btn-details" type="button">Detalhes</button>
+            <button class="btn-small btn-repeat" type="button">Repetir</button>
+            <button class="btn-small btn-cancel" type="button">Cancelar</button>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderSummary();
+      renderOrders();
+
+      document.querySelectorAll('.filter-btn').forEach((button) => {
+        button.addEventListener('click', () => {
+          document.querySelectorAll('.filter-btn').forEach((btn) => btn.classList.remove('active'));
+          button.classList.add('active');
+          renderOrders(button.dataset.filter);
+        });
+      });
+    });
+  </script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cafeteria Elegante</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <nav class="navbar" id="mainNav">
+        <a href="index.html" class="navbar-brand"><i class="fas fa-mug-hot"></i> Cafeteria Elegante</a>
+        <button class="navbar-toggle" type="button" aria-label="Abrir menu" onclick="document.getElementById('mainNav').classList.toggle('open')">
+          <i class="fas fa-bars"></i>
+        </button>
+        <ul class="navbar-links">
+          <li><a href="index.html" class="active">Home</a></li>
+          <li><a href="produtos.html">Cardápio</a></li>
+          <li><a href="pedidos.html">Pedidos</a></li>
+          <li><a href="login.html">Entrar</a></li>
+          <li><a href="administrativo.html">Admin</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-slide">
+        <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1400&q=80" alt="Café premium" />
+        <div class="hero-caption">
+          <div class="hero-caption-box">
+            <h1>Bem-vindo!</h1>
+            <p>Descubra os melhores cafés do Brasil</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-light">
+      <div class="container">
+        <h2 class="section-title">☕ Nosso Cardápio</h2>
+        <div class="card-grid">
+          <article class="menu-card">
+            <div class="card-header">Café Expresso</div>
+            <div class="card-body">
+              <p>Café puro e encorpado, extraído sob pressão. Intenso e aromático.</p>
+              <p class="price">R$ 5,00</p>
+            </div>
+          </article>
+
+          <article class="menu-card">
+            <div class="card-header">Cappuccino</div>
+            <div class="card-body">
+              <p>Mistura perfeita de café, leite e espuma cremosa. Clássico italiano.</p>
+              <p class="price">R$ 8,50</p>
+            </div>
+          </article>
+
+          <article class="menu-card">
+            <div class="card-header">Caffè Latte</div>
+            <div class="card-body">
+              <p>Café suave com bastante leite quente. Suave e reconfortante.</p>
+              <p class="price">R$ 8,00</p>
+            </div>
+          </article>
+
+          <article class="menu-card">
+            <div class="card-header">Mocha</div>
+            <div class="card-body">
+              <p>Café com chocolate e leite. Doce, cremoso e irresistível.</p>
+              <p class="price">R$ 9,50</p>
+            </div>
+          </article>
+
+          <article class="menu-card">
+            <div class="card-header">Macchiato</div>
+            <div class="card-body">
+              <p>Expresso com toque de leite vaporizado. Forte e elegante.</p>
+              <p class="price">R$ 7,50</p>
+            </div>
+          </article>
+
+          <article class="menu-card">
+            <div class="card-header">Americano</div>
+            <div class="card-body">
+              <p>Expresso diluído em água quente. Clássico e equilibrado.</p>
+              <p class="price">R$ 5,50</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-white" id="sobre">
+      <div class="container about">
+        <div>
+          <img src="https://images.unsplash.com/photo-1497636577773-f1231844b336?auto=format&fit=crop&w=1200&q=80" alt="Nossa cafeteria" />
+        </div>
+        <div>
+          <h2>Sobre Nós</h2>
+          <p class="text-muted">Bem-vindo à Cafeteria Elegante, um espaço dedicado aos amantes de bom café desde 2015.</p>
+          <p>Nosso café é selecionado com cuidado, sempre com grãos de produtores sustentáveis e uma experiência de preparo cuidadosa em cada xícara.</p>
+          <p><strong>História:</strong> a Cafeteria Elegante nasceu da ideia de transformar a pausa para o café em uma experiência acolhedora e sofisticada.</p>
+          <p><strong>Ambiente:</strong> sala elegante, área para estudo, reuniões, atendimento para retirada e delivery.</p>
+          <ul class="about-list">
+            <li><i class="fas fa-check-circle" style="color: var(--coffee); margin-right: 10px;"></i> Café 100% Premium</li>
+            <li><i class="fas fa-check-circle" style="color: var(--coffee); margin-right: 10px;"></i> Bolos artesanais</li>
+            <li><i class="fas fa-check-circle" style="color: var(--coffee); margin-right: 10px;"></i> Wi‑Fi gratuito</li>
+            <li><i class="fas fa-check-circle" style="color: var(--coffee); margin-right: 10px;"></i> Ambiente aconchegante</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section contact" id="contato">
+      <div class="container">
+        <h2 class="section-title" style="color: #fff;">Fale Conosco</h2>
+        <div class="contact-grid">
+          <div class="contact-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <h5>Localização</h5>
+            <p>Rua do Café, 123<br />São Paulo - SP</p>
+          </div>
+          <div class="contact-item">
+            <i class="fas fa-phone"></i>
+            <h5>Telefone</h5>
+            <p>(11) 3000-0000</p>
+          </div>
+          <div class="contact-item">
+            <i class="fas fa-envelope"></i>
+            <h5>Email</h5>
+            <p>contato@cafeteriaelegante.com</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2024 Cafeteria Elegante. Todos os direitos reservados.</p>
+      <div class="social-links">
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

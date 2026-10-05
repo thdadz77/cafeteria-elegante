@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Administrativo - Cafeteria Elegante</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <nav class="navbar" id="mainNav">
+        <a href="index.html" class="navbar-brand"><i class="fas fa-mug-hot"></i> Cafeteria Elegante</a>
+        <button class="navbar-toggle" type="button" aria-label="Abrir menu" onclick="document.getElementById('mainNav').classList.toggle('open')">
+          <i class="fas fa-bars"></i>
+        </button>
+        <ul class="navbar-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="produtos.html">Cardápio</a></li>
+          <li><a href="pedidos.html">Pedidos</a></li>
+          <li><a href="login.html">Entrar</a></li>
+          <li><a href="administrativo.html" class="active">Admin</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding: 42px 0 72px;">
+    <section class="admin-panel">
+      <h1><i class="fas fa-user-shield"></i> Administrativo</h1>
+      <p>Controle de atendimento e acompanhamento dos pedidos.</p>
+
+      <div class="tabs">
+        <button class="tab active" type="button" data-tab="Em atendimento">Em atendimento</button>
+        <button class="tab" type="button" data-tab="Finalizado">Finalizados</button>
+      </div>
+
+      <div id="adminList"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2024 Cafeteria Elegante. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script>
+    const adminOrders = [
+      {
+        id: 101,
+        customerName: 'Maria Silva',
+        customerEmail: 'maria@email.com',
+        status: 'Em atendimento',
+        createdAt: '2024-09-25 15:30',
+        items: [
+          { name: 'Cappuccino', quantity: 2, price: 8.5 },
+          { name: 'Croissant', quantity: 1, price: 6 }
+        ],
+        total: 23
+      },
+      {
+        id: 102,
+        customerName: 'João Pereira',
+        customerEmail: 'joao@email.com',
+        status: 'Finalizado',
+        createdAt: '2024-09-24 11:20',
+        items: [
+          { name: 'Café Expresso', quantity: 3, price: 5 },
+          { name: 'Pão de Queijo', quantity: 2, price: 4.5 }
+        ],
+        total: 21
+      },
+      {
+        id: 103,
+        customerName: 'Ana Costa',
+        customerEmail: 'ana@email.com',
+        status: 'Em atendimento',
+        createdAt: '2024-09-25 18:00',
+        items: [
+          { name: 'Milk Shake', quantity: 1, price: 9.5 },
+          { name: 'Tiramisu', quantity: 1, price: 10 }
+        ],
+        total: 19.5
+      }
+    ];
+
+    function formatCurrency(value) {
+      return Number(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
+    function renderAdminOrders(tab = 'Em atendimento') {
+      const container = document.getElementById('adminList');
+      const filtered = adminOrders.filter((order) => order.status === tab);
+
+      if (!filtered.length) {
+        container.innerHTML = '<div class="empty-orders"><i class="fas fa-inbox"></i><p>Nenhum pedido nesta categoria.</p></div>';
+        return;
+      }
+
+      container.innerHTML = filtered.map((order) => `
+        <article class="admin-order">
+          <div class="admin-order-header">
+            <h3>Pedido #${order.id}</h3>
+            <span class="order-status status-${order.status === 'Em atendimento' ? 'pending' : 'delivered'}">
+              ${order.status}
+            </span>
+          </div>
+          <p><strong>Cliente:</strong> ${order.customerName}</p>
+          <p><strong>Email:</strong> ${order.customerEmail}</p>
+          <p><strong>Data:</strong> ${order.createdAt}</p>
+          <div class="admin-order-items">
+            ${order.items.map((item) => `
+              <div class="admin-order-item">
+                <span>${item.quantity}x ${item.name}</span>
+                <strong>${formatCurrency(item.quantity * item.price)}</strong>
+              </div>
+            `).join('')}
+          </div>
+          <div class="order-total">
+            <span>Total:</span>
+            <span>${formatCurrency(order.total)}</span>
+          </div>
+          ${order.status === 'Em atendimento' ? '<button class="finish-order" type="button">Finalizar pedido</button>' : ''}
+        </article>
+      `).join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.tab').forEach((button) => {
+        button.addEventListener('click', () => {
+          document.querySelectorAll('.tab').forEach((btn) => btn.classList.remove('active'));
+          button.classList.add('active');
+          renderAdminOrders(button.dataset.tab);
+        });
+      });
+
+      renderAdminOrders();
+    });
+  </script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
